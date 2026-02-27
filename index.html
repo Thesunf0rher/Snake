@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNAKE — Neon Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>SNAKE</h1>
+
+  <!-- ── Score / Level / Best HUD ─────────────────────────────────────── -->
+  <div id="hud">
+    <div class="hud-item">
+      <div class="hud-label">SCORE</div>
+      <div class="hud-value" id="score-display">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">LEVEL</div>
+      <div class="hud-value" id="level-display">1</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">BEST</div>
+      <div class="hud-value" id="best-display">0</div>
+    </div>
+  </div>
+
+  <!-- ── Combo badge — shown only during an active combo chain ─────────── -->
+  <div id="combo-badge" class="hidden">
+    x<span id="combo-count">1</span> COMBO!
+  </div>
+
+  <!-- ── Toolbar: speed picker + wall-wrap toggle ──────────────────────── -->
+  <div id="toolbar">
+    <div class="tool-group">
+      SPEED:
+      <button class="opt-btn" data-spd="150"><span>SLOW</span></button>
+      <button class="opt-btn active" data-spd="100"><span>NORMAL</span></button>
+      <button class="opt-btn" data-spd="60"><span>FAST</span></button>
+    </div>
+    <div class="tool-group">
+      WALLS:
+      <button id="wrap-btn" class="opt-btn"><span>SOLID</span></button>
+    </div>
+  </div>
+
+  <!-- ── Game canvas + overlay ─────────────────────────────────────────── -->
+  <div id="arena">
+    <canvas id="cvs"></canvas>
+
+    <!-- Shown on start / pause / game-over -->
+    <div id="overlay">
+      <div id="overlay-title">SNAKE</div>
+      <div id="overlay-sub"></div>
+      <button id="btn-start"><span>START GAME</span></button>
+    </div>
+  </div>
+
+  <!-- ── Bonus food countdown bar ──────────────────────────────────────── -->
+  <div id="bonus-bar-wrap" class="hidden">
+    <div id="bonus-label">★ BONUS</div>
+    <div id="bonus-track"><div id="bonus-fill"></div></div>
+  </div>
+
+  <!-- ── Controls hint ─────────────────────────────────────────────────── -->
+  <div id="controls">
+    WASD / ARROWS — MOVE &nbsp;|&nbsp; P — PAUSE &nbsp;|&nbsp; R — RESTART
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

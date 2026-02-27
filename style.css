@@ -1,0 +1,293 @@
+/* ══════════════════════════════════════════════════════
+   CSS Variables
+   ══════════════════════════════════════════════════════ */
+:root {
+  --bg:     #050810;
+  --dim:    #1a2233;
+  --text:   #c8d8f0;
+  --green:  #00ff88;   /* snake / primary */
+  --red:    #ff2d55;   /* food / danger   */
+  --blue:   #00cfff;   /* UI accent       */
+  --yellow: #ffe600;   /* bonus / score   */
+}
+
+/* ══════════════════════════════════════════════════════
+   Reset
+   ══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ══════════════════════════════════════════════════════
+   Body
+   ══════════════════════════════════════════════════════ */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* CRT scanline overlay — purely decorative */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(0, 0, 0, .14) 2px, rgba(0, 0, 0, .14) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ══════════════════════════════════════════════════════
+   Title
+   ══════════════════════════════════════════════════════ */
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  letter-spacing: .35em;
+  color: var(--green);
+  text-shadow: 0 0 8px var(--green), 0 0 30px var(--green);
+}
+
+/* ══════════════════════════════════════════════════════
+   HUD
+   ══════════════════════════════════════════════════════ */
+#hud {
+  display: flex;
+  gap: 36px;
+}
+
+.hud-item { text-align: center; }
+
+.hud-label {
+  font-size: .58rem;
+  letter-spacing: .22em;
+  color: var(--blue);
+  opacity: .7;
+}
+
+.hud-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--yellow);
+  text-shadow: 0 0 10px var(--yellow);
+}
+
+/* Score/level pop animation triggered by JS */
+@keyframes hudpop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+.hud-value.pop { animation: hudpop .25s ease-out; }
+
+/* ══════════════════════════════════════════════════════
+   Combo badge
+   ══════════════════════════════════════════════════════ */
+#combo-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--red);
+  text-shadow: 0 0 10px var(--red);
+  animation: combopulse .38s ease infinite alternate;
+}
+
+@keyframes combopulse {
+  from { opacity: .65; }
+  to   { opacity: 1;   text-shadow: 0 0 22px var(--red); }
+}
+
+/* ══════════════════════════════════════════════════════
+   Toolbar (speed + wrap)
+   ══════════════════════════════════════════════════════ */
+#toolbar {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  color: var(--blue);
+}
+
+.tool-group {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+/* ══════════════════════════════════════════════════════
+   Buttons
+   ══════════════════════════════════════════════════════ */
+button {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .85rem;
+  letter-spacing: .14em;
+  padding: 10px 30px;
+  background: transparent;
+  color: var(--green);
+  border: 2px solid var(--green);
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: color .2s, box-shadow .2s;
+}
+
+/* Neon fill slide-in on hover */
+button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  opacity: 0;
+  transition: opacity .18s;
+  z-index: 0;
+}
+
+button:hover { color: var(--bg); box-shadow: 0 0 20px var(--green); }
+button:hover::after { opacity: 1; }
+button span  { position: relative; z-index: 1; }
+
+/* Smaller toolbar option buttons */
+.opt-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  padding: 4px 11px;
+  border-width: 1px;
+  border-color: var(--dim);
+  color: var(--text);
+  opacity: .55;
+}
+
+.opt-btn::after    { background: var(--blue); }
+.opt-btn:hover     { color: var(--bg); box-shadow: 0 0 10px var(--blue); border-color: var(--blue); opacity: 1; }
+
+/* Active state for option buttons */
+.opt-btn.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  opacity: 1;
+  box-shadow: 0 0 8px var(--blue);
+}
+
+/* ══════════════════════════════════════════════════════
+   Arena (canvas wrapper)
+   ══════════════════════════════════════════════════════ */
+#arena {
+  position: relative;
+  border: 2px solid var(--green);
+  box-shadow:
+    0 0 14px var(--green),
+    0 0 44px rgba(0, 255, 136, .2),
+    inset 0 0 28px rgba(0, 255, 136, .04);
+  transition: border-color .3s, box-shadow .3s;
+}
+
+/* Flash red on death, defined via JS class toggle */
+@keyframes deathflash {
+  0%   { border-color: var(--red);   box-shadow: 0 0 30px var(--red), 0 0 80px rgba(255,45,85,.5); }
+  100% { border-color: var(--green); box-shadow: 0 0 14px var(--green), 0 0 44px rgba(0,255,136,.2); }
+}
+
+#arena.flash { animation: deathflash .5s ease-out forwards; }
+
+canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* ══════════════════════════════════════════════════════
+   Overlay (start / pause / game-over)
+   ══════════════════════════════════════════════════════ */
+#overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(5, 8, 16, .85);
+  backdrop-filter: blur(3px);
+  transition: opacity .3s;
+}
+
+#overlay.hidden { opacity: 0; pointer-events: none; }
+
+#overlay-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.2rem, 3.5vw, 2rem);
+  font-weight: 900;
+  letter-spacing: .16em;
+  color: var(--red);
+  text-shadow: 0 0 14px var(--red);
+}
+
+#overlay-sub {
+  font-size: .8rem;
+  color: var(--text);
+  opacity: .65;
+  letter-spacing: .08em;
+  text-align: center;
+  line-height: 2;
+}
+
+/* ══════════════════════════════════════════════════════
+   Bonus food countdown bar
+   ══════════════════════════════════════════════════════ */
+#bonus-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .62rem;
+  letter-spacing: .16em;
+  color: var(--yellow);
+}
+
+#bonus-label { text-shadow: 0 0 8px var(--yellow); }
+
+#bonus-track {
+  width: 130px;
+  height: 5px;
+  background: var(--dim);
+  border: 1px solid rgba(255, 230, 0, .5);
+  box-shadow: 0 0 5px rgba(255, 230, 0, .25);
+}
+
+#bonus-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--yellow);
+  box-shadow: 0 0 8px var(--yellow);
+  transition: width .18s linear;
+}
+
+/* ══════════════════════════════════════════════════════
+   Controls hint
+   ══════════════════════════════════════════════════════ */
+#controls {
+  font-size: .64rem;
+  opacity: .38;
+  letter-spacing: .1em;
+}
+
+/* ══════════════════════════════════════════════════════
+   Utility
+   ══════════════════════════════════════════════════════ */
+.hidden { display: none !important; }
