@@ -27,12 +27,12 @@
     </div>
   </div>
 
-  <!-- ── Combo badge — shown only during an active combo chain ─────────── -->
+  <!-- ── Combo badge ───────────────────────────────────────────────────── -->
   <div id="combo-badge" class="hidden">
     x<span id="combo-count">1</span> COMBO!
   </div>
 
-  <!-- ── Toolbar: speed picker + wall-wrap toggle ──────────────────────── -->
+  <!-- ── Toolbar ───────────────────────────────────────────────────────── -->
   <div id="toolbar">
     <div class="tool-group">
       SPEED:
@@ -44,13 +44,19 @@
       WALLS:
       <button id="wrap-btn" class="opt-btn"><span>SOLID</span></button>
     </div>
+    <!-- Snake skin colour picker -->
+    <div class="tool-group">
+      SKIN:
+      <button class="skin-btn active" data-skin="green"  title="Green"></button>
+      <button class="skin-btn"        data-skin="cyan"   title="Cyber"></button>
+      <button class="skin-btn"        data-skin="purple" title="Ghost"></button>
+      <button class="skin-btn"        data-skin="gold"   title="Gold"></button>
+    </div>
   </div>
 
   <!-- ── Game canvas + overlay ─────────────────────────────────────────── -->
   <div id="arena">
     <canvas id="cvs"></canvas>
-
-    <!-- Shown on start / pause / game-over -->
     <div id="overlay">
       <div id="overlay-title">SNAKE</div>
       <div id="overlay-sub"></div>
