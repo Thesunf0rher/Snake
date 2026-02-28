@@ -5,10 +5,10 @@
   --bg:     #050810;
   --dim:    #1a2233;
   --text:   #c8d8f0;
-  --green:  #00ff88;   /* snake / primary */
-  --red:    #ff2d55;   /* food / danger   */
-  --blue:   #00cfff;   /* UI accent       */
-  --yellow: #ffe600;   /* bonus / score   */
+  --green:  #00ff88;
+  --red:    #ff2d55;
+  --blue:   #00cfff;
+  --yellow: #ffe600;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -33,7 +33,7 @@ body {
   user-select: none;
 }
 
-/* CRT scanline overlay — purely decorative */
+/* CRT scanline overlay */
 body::before {
   content: '';
   position: fixed;
@@ -41,7 +41,7 @@ body::before {
   background: repeating-linear-gradient(
     0deg,
     transparent, transparent 2px,
-    rgba(0, 0, 0, .14) 2px, rgba(0, 0, 0, .14) 4px
+    rgba(0,0,0,.13) 2px, rgba(0,0,0,.13) 4px
   );
   pointer-events: none;
   z-index: 999;
@@ -62,11 +62,7 @@ h1 {
 /* ══════════════════════════════════════════════════════
    HUD
    ══════════════════════════════════════════════════════ */
-#hud {
-  display: flex;
-  gap: 36px;
-}
-
+#hud { display: flex; gap: 36px; }
 .hud-item { text-align: center; }
 
 .hud-label {
@@ -84,13 +80,11 @@ h1 {
   text-shadow: 0 0 10px var(--yellow);
 }
 
-/* Score/level pop animation triggered by JS */
 @keyframes hudpop {
-  0%   { transform: scale(1); }
-  45%  { transform: scale(1.4); }
-  100% { transform: scale(1); }
+  0%  { transform: scale(1); }
+  45% { transform: scale(1.4); }
+  100%{ transform: scale(1); }
 }
-
 .hud-value.pop { animation: hudpop .25s ease-out; }
 
 /* ══════════════════════════════════════════════════════
@@ -108,15 +102,15 @@ h1 {
 
 @keyframes combopulse {
   from { opacity: .65; }
-  to   { opacity: 1;   text-shadow: 0 0 22px var(--red); }
+  to   { opacity: 1; text-shadow: 0 0 22px var(--red); }
 }
 
 /* ══════════════════════════════════════════════════════
-   Toolbar (speed + wrap)
+   Toolbar
    ══════════════════════════════════════════════════════ */
 #toolbar {
   display: flex;
-  gap: 22px;
+  gap: 18px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -132,7 +126,7 @@ h1 {
 }
 
 /* ══════════════════════════════════════════════════════
-   Buttons
+   Buttons — base
    ══════════════════════════════════════════════════════ */
 button {
   font-family: 'Orbitron', sans-serif;
@@ -149,7 +143,6 @@ button {
   transition: color .2s, box-shadow .2s;
 }
 
-/* Neon fill slide-in on hover */
 button::after {
   content: '';
   position: absolute;
@@ -160,11 +153,11 @@ button::after {
   z-index: 0;
 }
 
-button:hover { color: var(--bg); box-shadow: 0 0 20px var(--green); }
-button:hover::after { opacity: 1; }
-button span  { position: relative; z-index: 1; }
+button:hover          { color: var(--bg); box-shadow: 0 0 20px var(--green); }
+button:hover::after   { opacity: 1; }
+button span           { position: relative; z-index: 1; }
 
-/* Smaller toolbar option buttons */
+/* ── Toolbar option buttons (smaller) ─────────────────── */
 .opt-btn {
   font-family: 'Share Tech Mono', monospace;
   font-size: .72rem;
@@ -175,10 +168,9 @@ button span  { position: relative; z-index: 1; }
   opacity: .55;
 }
 
-.opt-btn::after    { background: var(--blue); }
-.opt-btn:hover     { color: var(--bg); box-shadow: 0 0 10px var(--blue); border-color: var(--blue); opacity: 1; }
+.opt-btn::after  { background: var(--blue); }
+.opt-btn:hover   { color: var(--bg); box-shadow: 0 0 10px var(--blue); border-color: var(--blue); opacity: 1; }
 
-/* Active state for option buttons */
 .opt-btn.active {
   border-color: var(--blue);
   color: var(--blue);
@@ -186,26 +178,67 @@ button span  { position: relative; z-index: 1; }
   box-shadow: 0 0 8px var(--blue);
 }
 
+/* ── Snake skin colour picker circles ────────────────── */
+.skin-btn {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  padding: 0;
+  border: 2px solid transparent;
+  opacity: .55;
+  transition: opacity .2s, border-color .2s, box-shadow .2s;
+}
+
+/* Prevent the default neon fill overlay on skin buttons */
+.skin-btn::after { display: none; }
+
+/* Each colour is set via data-skin, applied by JS on load */
+.skin-btn[data-skin="green"]  { background: #00ff88; }
+.skin-btn[data-skin="cyan"]   { background: #00e5ff; }
+.skin-btn[data-skin="purple"] { background: #cc44ff; }
+.skin-btn[data-skin="gold"]   { background: #ffaa00; }
+
+.skin-btn:hover,
+.skin-btn.active {
+  border-color: #fff;
+  opacity: 1;
+}
+
+/* Override button hover text-color change for skin buttons */
+.skin-btn:hover { color: transparent; box-shadow: none; }
+
 /* ══════════════════════════════════════════════════════
-   Arena (canvas wrapper)
+   Arena
    ══════════════════════════════════════════════════════ */
 #arena {
   position: relative;
   border: 2px solid var(--green);
   box-shadow:
     0 0 14px var(--green),
-    0 0 44px rgba(0, 255, 136, .2),
-    inset 0 0 28px rgba(0, 255, 136, .04);
-  transition: border-color .3s, box-shadow .3s;
+    0 0 44px rgba(0,255,136,.2),
+    inset 0 0 28px rgba(0,255,136,.04);
+  transition: border-color .25s, box-shadow .25s;
 }
 
-/* Flash red on death, defined via JS class toggle */
+/* ── Death flash ──────────────────────────────────────── */
 @keyframes deathflash {
-  0%   { border-color: var(--red);   box-shadow: 0 0 30px var(--red), 0 0 80px rgba(255,45,85,.5); }
+  0%   { border-color: var(--red); box-shadow: 0 0 30px var(--red), 0 0 80px rgba(255,45,85,.5); }
   100% { border-color: var(--green); box-shadow: 0 0 14px var(--green), 0 0 44px rgba(0,255,136,.2); }
 }
+#arena.flash { animation: deathflash .55s ease-out forwards; }
 
-#arena.flash { animation: deathflash .5s ease-out forwards; }
+/* ── Screen shake on death ────────────────────────────── */
+@keyframes shake {
+  0%, 100% { transform: translate(0,0) rotate(0deg); }
+  10%       { transform: translate(-6px,-3px) rotate(-.4deg); }
+  22%       { transform: translate(5px, 4px) rotate(.3deg); }
+  34%       { transform: translate(-4px, 6px) rotate(-.3deg); }
+  46%       { transform: translate(5px,-4px) rotate(.4deg); }
+  58%       { transform: translate(-3px, 3px) rotate(-.2deg); }
+  70%       { transform: translate(3px,-2px) rotate(.2deg); }
+  82%       { transform: translate(-1px, 2px) rotate(-.1deg); }
+}
+#arena.shake { animation: shake .45s ease-out forwards; }
 
 canvas {
   display: block;
@@ -213,7 +246,7 @@ canvas {
 }
 
 /* ══════════════════════════════════════════════════════
-   Overlay (start / pause / game-over)
+   Overlay
    ══════════════════════════════════════════════════════ */
 #overlay {
   position: absolute;
@@ -223,7 +256,7 @@ canvas {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  background: rgba(5, 8, 16, .85);
+  background: rgba(5,8,16,.85);
   backdrop-filter: blur(3px);
   transition: opacity .3s;
 }
@@ -232,7 +265,7 @@ canvas {
 
 #overlay-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.2rem, 3.5vw, 2rem);
+  font-size: clamp(1.2rem,3.5vw,2rem);
   font-weight: 900;
   letter-spacing: .16em;
   color: var(--red);
@@ -249,7 +282,7 @@ canvas {
 }
 
 /* ══════════════════════════════════════════════════════
-   Bonus food countdown bar
+   Bonus bar
    ══════════════════════════════════════════════════════ */
 #bonus-bar-wrap {
   display: flex;
@@ -266,8 +299,8 @@ canvas {
   width: 130px;
   height: 5px;
   background: var(--dim);
-  border: 1px solid rgba(255, 230, 0, .5);
-  box-shadow: 0 0 5px rgba(255, 230, 0, .25);
+  border: 1px solid rgba(255,230,0,.5);
+  box-shadow: 0 0 5px rgba(255,230,0,.25);
 }
 
 #bonus-fill {
