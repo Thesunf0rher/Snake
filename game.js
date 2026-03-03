@@ -804,7 +804,7 @@ function drawEyes(head) {
   const ex = dy !== 0 ? 4 : 0;
   const ey = dx !== 0 ? 4 : 0;
 
-  ctx.fillStyle = COLOR.bg;
+  ctx.fillStyle = "red";
   ctx.beginPath();
   ctx.arc(cx + dx*4 - ey, cy + dy*4 - ex, 2.2, 0, Math.PI * 2);
   ctx.arc(cx + dx*4 + ey, cy + dy*4 + ex, 2.2, 0, Math.PI * 2);
