@@ -14,7 +14,7 @@ const CELL_PAD   = 2;
 const CELL_INNER = CELL - CELL_PAD * 2;
 
 const FOODS_PER_LEVEL       = 5;
-const SPEED_STEP_MS         = 6;
+const SPEED_STEP_MS         = 100;
 const MIN_INTERVAL          = 45;
 const BONUS_LIFETIME        = 8000;
 const BONUS_WARN_AT         = 2500;
@@ -155,7 +155,7 @@ let foodsEaten  = 0;
 let combo       = 0;
 let lastEatTime = 0;
 
-let baseSpeed   = 100;
+let baseSpeed   = 7;
 let rafId       = null;
 let lastTickAt  = 0;
 let lastFrameAt = 0;
