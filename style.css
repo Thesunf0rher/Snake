@@ -9,6 +9,7 @@
   --red:    #ff2d55;
   --blue:   #00cfff;
   --yellow: #ffe600;
+  --db: #2c3e50;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -20,7 +21,7 @@
    Body
    ══════════════════════════════════════════════════════ */
 body {
-  background: var(--bg);
+  background: var(--db);
   color: var(--text);
   font-family: 'Share Tech Mono', monospace;
   min-height: 100vh;
